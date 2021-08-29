@@ -3,10 +3,19 @@ import cors from 'cors';
 const morgan = require('morgan');
 require('dotenv').config();
 import { readdirSync } from 'fs';
-
+import mongoose from 'mongoose';
 // Create express app
 
 const app = express();
+
+//DB Connection
+
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+  })
+  .then(() => console.log('DB Connected'))
+  .catch((err) => console.log('DB Connection Error', err));
 
 // Apply Middlewares
 
