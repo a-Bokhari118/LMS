@@ -1,6 +1,8 @@
 import User from '../models/user';
 import { hashPassword, ComparePassword } from '../utils/auth';
+import jwt from 'jsonwebtoken';
 
+// Register
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -28,6 +30,35 @@ export const register = async (req, res) => {
 
     console.log('saved user', user);
     return res.json({ ok: true });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send('Error, Try again');
+  }
+};
+
+// Login
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    // Check i user exists
+    const user = await User.findOne({ email }).exec();
+    if (!user) return status(400).send('No User Found');
+
+    // Check password
+    const match = await ComparePassword(password, user.password);
+    // Create jwt
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d',
+    });
+    // return user and token to client
+    user.password = undefined; // do not return user password
+    // send token in cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+    });
+    // send user as json res
+    res.json(user);
   } catch (err) {
     console.log(err);
     return res.status(400).send('Error, Try again');
