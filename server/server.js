@@ -4,9 +4,13 @@ const morgan = require('morgan');
 require('dotenv').config();
 import { readdirSync } from 'fs';
 import mongoose from 'mongoose';
+import csrf from 'csurf';
+import cookieParser from 'cookie-parser';
+('cookie-parser');
 // Create express app
 
 const app = express();
+const csrfProtection = csrf({ cookie: true });
 
 //DB Connection
 
@@ -21,10 +25,16 @@ mongoose
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan('dev'));
 
 // Route
 readdirSync('./routes').map((r) => app.use('/api', require(`./routes/${r}`)));
+// csrf
+app.use(csrfProtection);
+app.get('/api/csrf-token', (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 
 // Port
 
