@@ -1,6 +1,7 @@
 import { Menu } from 'antd';
 import Link from 'next/link';
 import {
+  AppstoreAddOutlined,
   AppstoreOutlined,
   LoginOutlined,
   LogoutOutlined,
@@ -13,7 +14,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 
-const { Item, SubMenu } = Menu;
+const { Item, SubMenu, ItemGroup } = Menu;
 
 const TopNav = () => {
   const [current, setCurrent] = useState('');
@@ -69,9 +70,16 @@ const TopNav = () => {
 
       {user !== null && (
         <SubMenu icon={<UserOutlined />} title={user?.name} className="ms-auto">
-          <Item onClick={logout} icon={<LogoutOutlined />} className="ms-auto">
-            Logout
-          </Item>
+          <ItemGroup>
+            <Item key="/user" icon={<AppstoreAddOutlined />}>
+              <Link href="/user">
+                <a>Dashboard</a>
+              </Link>
+            </Item>
+            <Item onClick={logout} icon={<LogoutOutlined />}>
+              Logout
+            </Item>
+          </ItemGroup>
         </SubMenu>
       )}
     </Menu>
