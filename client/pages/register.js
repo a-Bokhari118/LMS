@@ -1,23 +1,29 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { SyncOutlined } from '@ant-design/icons';
+
 const register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const { data } = await axios.post(`http://localhost:8000/api/register`, {
         name,
         email,
         password,
       });
       toast.success('User Created Successfully');
+      setLoading(false);
     } catch (err) {
       toast.error(err.response.data);
+      setLoading(false);
     }
   };
   return (
@@ -51,8 +57,12 @@ const register = () => {
             required
           />
 
-          <button className="btn btn-block btn-primary p-2 w-100" type="submit">
-            Submit
+          <button
+            className="btn btn-block btn-primary p-2 w-100"
+            type="submit"
+            disabled={!name || !email || !password || loading}
+          >
+            {loading ? <SyncOutlined spin /> : 'Submit'}
           </button>
         </form>
       </div>
