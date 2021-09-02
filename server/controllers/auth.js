@@ -2,6 +2,7 @@ import User from '../models/user';
 import { hashPassword, ComparePassword } from '../utils/auth';
 import jwt from 'jsonwebtoken';
 import AWS from 'aws-sdk';
+import { nanoid } from 'nanoid';
 
 const awsConfig = {
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -135,4 +136,59 @@ export const sendTestEmail = async (req, res) => {
       res.json({ ok: true });
     })
     .catch((err) => console.log(err));
+};
+
+// forgot password
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const shortCode = nanoid(6).toUpperCase();
+    const user = await User.findOneAndUpdate(
+      { email },
+      { passwordResetCode: shortCode }
+    );
+
+    if (!user) return res.status(400).send('User Not Found');
+
+    // Send Email
+    const params = {
+      Source: process.env.EMAIL_FROM,
+      Destination: {
+        ToAddresses: [email],
+      },
+      Message: {
+        Body: {
+          Html: {
+            Charset: 'UTF-8',
+            Data: `
+              <html>
+                <h1>Reset Password</h1>
+                <p>Please use this code to reset your password</p>
+                <h2 style='color:red;'>${shortCode}</h2>
+                <i>LMS.com</i>
+                <br>
+                <br>
+                <p><strong>Notice</strong> if you did not request a rest password please contact the support</p>
+              </html>
+            `,
+          },
+        },
+        Subject: {
+          Charset: 'UTF-8',
+          Data: 'Password Reset Code',
+        },
+      },
+    };
+
+    const emailSent = SES.sendEmail(params).promise();
+    emailSent
+      .then((data) => {
+        console.log(data);
+        res.json({ ok: true });
+      })
+      .catch((err) => console.log(err));
+  } catch (err) {
+    console.log(err);
+  }
 };
