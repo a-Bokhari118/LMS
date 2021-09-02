@@ -6,6 +6,7 @@ import {
   currentUser,
   sendTestEmail,
   forgotPassword,
+  resetPassword,
 } from '../controllers/auth';
 import { requireSignin } from '../middlewares';
 const router = express.Router();
@@ -16,4 +17,5 @@ router.get('/logout', logout);
 router.get('/current-user', requireSignin, currentUser);
 router.get('/send-email', sendTestEmail);
 router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 module.exports = router;

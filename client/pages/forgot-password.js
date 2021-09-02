@@ -32,6 +32,7 @@ const forgotPassword = () => {
       setLoading(true);
       const { data } = await axios.post('/api/forgot-password', { email });
       setSuccess(true);
+      setLoading(false);
       toast.success('Check Your Email For Secret Code');
     } catch (err) {
       setLoading(false);
@@ -42,8 +43,6 @@ const forgotPassword = () => {
   // reset password Submitting Code
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    console.log(email, code, newPassword);
-    return;
     try {
       setLoading(true);
       const { data } = await axios.post('/api/reset-password', {
@@ -55,6 +54,8 @@ const forgotPassword = () => {
       setCode('');
       setNewPassword('');
       setLoading(false);
+      router.push('/login');
+      toast.success('Login again with your new password');
     } catch (err) {
       setLoading(false);
       toast.error(err.response.data);
@@ -76,6 +77,7 @@ const forgotPassword = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter Email"
             required
+            disabled={success}
           />
 
           {success && (

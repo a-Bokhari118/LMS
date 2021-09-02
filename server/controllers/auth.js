@@ -58,6 +58,7 @@ export const login = async (req, res) => {
 
     // Check password
     const match = await ComparePassword(password, user.password);
+    if (!match) return res.status(400).send('Invalid Credintials');
     // Create jwt
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: '7d',
@@ -190,5 +191,22 @@ export const forgotPassword = async (req, res) => {
       .catch((err) => console.log(err));
   } catch (err) {
     console.log(err);
+  }
+};
+
+// reset password
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
+    const hashedPassword = await hashPassword(newPassword);
+    const user = await User.findOneAndUpdate(
+      { email, passwordResetCode: code },
+      { password: hashedPassword, passwordResetCode: '' }
+    ).exec();
+    res.json({ ok: true });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send('Error, Try again');
   }
 };
