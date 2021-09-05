@@ -3,8 +3,10 @@ import Link from 'next/link';
 import {
   AppstoreAddOutlined,
   AppstoreOutlined,
+  CarryOutOutlined,
   LoginOutlined,
   LogoutOutlined,
+  TeamOutlined,
   UserAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -39,11 +41,48 @@ const TopNav = () => {
         key="/"
         onClick={(e) => setCurrent(e.key)}
         icon={<AppstoreOutlined />}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       >
         <Link href="/">
-          <a className="">Home</a>
+          <a>LMS</a>
         </Link>
       </Item>
+
+      {user && user.role && user.role.includes('Instructor') ? (
+        <Item
+          key="/instructor/course/create"
+          onClick={(e) => setCurrent(e.key)}
+          icon={<CarryOutOutlined />}
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Link href="/instructor/course/create">
+            <a>Create Course</a>
+          </Link>
+        </Item>
+      ) : (
+        <Item
+          key="/user/become-instructor"
+          onClick={(e) => setCurrent(e.key)}
+          icon={<TeamOutlined />}
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Link href="/user/become-instructor">
+            <a>Become Instructor</a>
+          </Link>
+        </Item>
+      )}
 
       {user === null && (
         <>
@@ -53,7 +92,7 @@ const TopNav = () => {
             icon={<LoginOutlined />}
           >
             <Link href="/login">
-              <a className="">Login</a>
+              <a>Login</a>
             </Link>
           </Item>
           <Item
@@ -62,7 +101,7 @@ const TopNav = () => {
             icon={<UserAddOutlined />}
           >
             <Link href="/register">
-              <a className="">Register</a>
+              <a>Register</a>
             </Link>
           </Item>
         </>
@@ -71,12 +110,26 @@ const TopNav = () => {
       {user !== null && (
         <SubMenu icon={<UserOutlined />} title={user?.name} className="ms-auto">
           <ItemGroup>
-            <Item key="/user" icon={<AppstoreAddOutlined />}>
+            <Item
+              key="/user"
+              icon={<AppstoreAddOutlined />}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <Link href="/user">
                 <a>Dashboard</a>
               </Link>
             </Item>
-            <Item onClick={logout} icon={<LogoutOutlined />}>
+            <Item
+              onClick={logout}
+              icon={<LogoutOutlined />}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               Logout
             </Item>
           </ItemGroup>
