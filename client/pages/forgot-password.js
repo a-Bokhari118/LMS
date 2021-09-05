@@ -23,7 +23,7 @@ const forgotPassword = () => {
   // Redirect LoggedIn users
   useEffect(() => {
     if (user !== null) router.push('/');
-  }, []);
+  }, [user]);
 
   // reset password (sending code)
   const handleSubmit = async (e) => {
