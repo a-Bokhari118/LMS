@@ -26,7 +26,7 @@ const UserRoute = ({ children }) => {
         />
       ) : (
         <>
-          <div className="container-fluid">
+          <div className="container-fluid px-5 py-2">
             <div className="row">
               <div className="col-md-2">
                 <UserNav />

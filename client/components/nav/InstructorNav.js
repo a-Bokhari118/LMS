@@ -9,7 +9,7 @@ const InstructorNav = () => {
   }, [process.browser && window.location.pathname]);
 
   return (
-    <div className="nav flex-column nav-pills mt-2">
+    <div className="nav flex-column nav-pills mt-2 ">
       <Link href="/instructor">
         <a className={`nav-link ${current === '/instructor' ? 'active' : ''}`}>
           Dashboard
