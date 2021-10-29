@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { Context } from '../../context';
 import { Button } from 'antd';
 import axios from 'axios';
+
 import {
   SettingOutlined,
   UserSwitchOutlined,
@@ -9,22 +10,28 @@ import {
 } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import UserRoute from '../../components/routes/UserRoute';
+import { useRouter } from 'next/router';
 
 const BecomeInstructor = () => {
-  // state
-  const [loading, setLoading] = useState(false);
   const {
     state: { user },
+    dispatch,
   } = useContext(Context);
+  const router = useRouter();
+  // state
+  const [loading, setLoading] = useState(false);
 
   const becomeInstructor = () => {
-    // console.log("become instructor");
     setLoading(true);
     axios
       .post('/api/make-instructor')
       .then((res) => {
-        console.log(res);
-        window.location.href = res.data;
+        dispatch({
+          type: 'LOGIN',
+          payload: res.data,
+        });
+        window.localStorage.setItem('user', JSON.stringify(res.data));
+        window.location.href = '/instructor';
       })
       .catch((err) => {
         console.log(err.response.status);

@@ -36,106 +36,112 @@ const TopNav = () => {
   };
 
   return (
-    <Menu mode="horizontal" selectedKeys={[current]}>
-      <Item
-        key="/"
-        onClick={(e) => setCurrent(e.key)}
-        icon={<AppstoreOutlined />}
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Link href="/">
-          <a>LMS</a>
-        </Link>
-      </Item>
-
-      {user && user.role && user.role.includes('Instructor') ? (
+    <useRouter>
+      <Menu mode="horizontal" selectedKeys={[current]}>
         <Item
-          key="/instructor/course/create"
+          key="/"
           onClick={(e) => setCurrent(e.key)}
-          icon={<CarryOutOutlined />}
+          icon={<AppstoreOutlined />}
           style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
           }}
         >
-          <Link href="/instructor/course/create">
-            <a>Create Course</a>
+          <Link href="/">
+            <a>LMS</a>
           </Link>
         </Item>
-      ) : (
-        <Item
-          key="/user/become-instructor"
-          onClick={(e) => setCurrent(e.key)}
-          icon={<TeamOutlined />}
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Link href="/user/become-instructor">
-            <a>Become Instructor</a>
-          </Link>
-        </Item>
-      )}
 
-      {user === null && (
-        <>
+        {user && user.role && user.role.includes('Instructor') ? (
           <Item
-            key="/login"
+            key="/instructor/course/create"
             onClick={(e) => setCurrent(e.key)}
-            icon={<LoginOutlined />}
+            icon={<CarryOutOutlined />}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
-            <Link href="/login">
-              <a>Login</a>
+            <Link href="/instructor/course/create">
+              <a>Create Course</a>
             </Link>
           </Item>
+        ) : (
           <Item
-            key="/register"
+            key="/user/become-instructor"
             onClick={(e) => setCurrent(e.key)}
-            icon={<UserAddOutlined />}
+            icon={<TeamOutlined />}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
-            <Link href="/register">
-              <a>Register</a>
+            <Link href="/user/become-instructor">
+              <a>Become Instructor</a>
             </Link>
           </Item>
-        </>
-      )}
+        )}
 
-      {user !== null && (
-        <SubMenu icon={<UserOutlined />} title={user?.name} className="ms-auto">
-          <ItemGroup>
+        {user === null && (
+          <>
             <Item
-              key="/user"
-              icon={<AppstoreAddOutlined />}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
+              key="/login"
+              onClick={(e) => setCurrent(e.key)}
+              icon={<LoginOutlined />}
             >
-              <Link href="/user">
-                <a>Dashboard</a>
+              <Link href="/login">
+                <a>Login</a>
               </Link>
             </Item>
             <Item
-              onClick={logout}
-              icon={<LogoutOutlined />}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
+              key="/register"
+              onClick={(e) => setCurrent(e.key)}
+              icon={<UserAddOutlined />}
             >
-              Logout
+              <Link href="/register">
+                <a>Register</a>
+              </Link>
             </Item>
-          </ItemGroup>
-        </SubMenu>
-      )}
-    </Menu>
+          </>
+        )}
+
+        {user !== null && (
+          <SubMenu
+            icon={<UserOutlined />}
+            title={user?.name}
+            className="ms-auto"
+          >
+            <ItemGroup>
+              <Item
+                key="/user"
+                icon={<AppstoreAddOutlined />}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <Link href="/user">
+                  <a>Dashboard</a>
+                </Link>
+              </Item>
+              <Item
+                onClick={logout}
+                icon={<LogoutOutlined />}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                Logout
+              </Item>
+            </ItemGroup>
+          </SubMenu>
+        )}
+      </Menu>
+    </useRouter>
   );
 };
 
