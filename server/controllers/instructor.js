@@ -14,3 +14,19 @@ export const makeInstructor = async (req, res) => {
     return res.status(400).send('Error, Try again');
   }
 };
+
+export const CurrentInstructor = async (req, res) => {
+  try {
+    let user = await User.findById(req.user._id).select('-password').exec();
+
+    if (!user.role.includes('Instructor')) {
+      return res.sendStatus(403);
+    } else {
+      res.json({ ok: true });
+    }
+  } catch (error) {
+    console.log(err);
+
+    return res.status(400).send('Error, Try again');
+  }
+};
