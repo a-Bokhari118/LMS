@@ -16,7 +16,7 @@ const CourseCreate = () => {
     loading: false,
   });
 
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState({});
   const [preview, setPreview] = useState('');
 
   const handleChange = (e) => {
@@ -33,6 +33,7 @@ const CourseCreate = () => {
           image: uri,
         });
 
+        setImage(data);
         console.log('image Uploaded', data);
         setValues({ ...values, loading: false });
       } catch (err) {
@@ -43,9 +44,22 @@ const CourseCreate = () => {
     });
   };
 
+  const handleImageRemove = async () => {
+    try {
+      setValues({ ...values, loading: true });
+      const res = await axios.post('/api/course/remove-image', { image });
+      setImage({});
+      setPreview('');
+      setValues({ ...values, loading: false });
+    } catch (err) {
+      console.log(err);
+      setValues({ ...values, loading: false });
+      toast.error('Image Remove Faild');
+    }
+  };
+
   const handleSubmit = (e) => {
-    e.preventdefult();
-    console.log(values);
+    e.preventDefault();
   };
 
   return (
@@ -58,12 +72,15 @@ const CourseCreate = () => {
           handleSubmit={handleSubmit}
           handleChange={handleChange}
           handleImage={handleImage}
+          handleImageRemove={handleImageRemove}
           values={values}
           setValues={setValues}
           preview={preview}
         />
       </div>
       <pre>{JSON.stringify(values, null, 4)}</pre>
+      <ht />
+      <pre>{JSON.stringify(image, null, 4)}</pre>
     </InstructorRoute>
   );
 };
