@@ -1,3 +1,4 @@
+import Course from '../models/course';
 import User from '../models/user';
 export const makeInstructor = async (req, res) => {
   try {
@@ -27,5 +28,16 @@ export const CurrentInstructor = async (req, res) => {
     console.log(err);
 
     return res.status(400).send('Error, Try again');
+  }
+};
+
+export const instructorCourses = async (req, res) => {
+  try {
+    const courses = await Course.find({ instructor: req.user._id })
+      .sort({ createdAt: -1 })
+      .exec();
+    res.json(courses);
+  } catch (err) {
+    console.log(err);
   }
 };

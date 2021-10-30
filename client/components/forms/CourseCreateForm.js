@@ -44,7 +44,7 @@ const CourseCreateForm = ({
         <div className="col">
           <div className="form-group pt-3 ">
             <Select
-              onChange={(v) => setValues({ ...values, paid: !values.paid })}
+              onChange={(v) => setValues({ ...values, paid: v, price: 0 })}
               value={values.paid}
               style={{ width: '100%' }}
               size="large"
@@ -54,19 +54,19 @@ const CourseCreateForm = ({
             </Select>
           </div>
         </div>
-        {values.paid && (
-          <div className="form-group pt-3">
-            <Select
-              defaultValue="$9.99"
-              style={{ width: '100%' }}
-              onChange={(v) => setValues({ ...values, price: v })}
-              tokenSeparators={[,]}
-              size="large"
-            >
-              {children}
-            </Select>
-          </div>
-        )}
+
+        <div className="form-group pt-3">
+          <Select
+            defaultValue="$9.99"
+            style={{ width: '100%' }}
+            onChange={(v) => setValues({ ...values, price: v })}
+            tokenSeparators={[,]}
+            size="large"
+            disabled={!values.paid}
+          >
+            {children}
+          </Select>
+        </div>
       </div>
 
       <div className="form-group pt-3">
