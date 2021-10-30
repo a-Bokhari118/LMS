@@ -42,7 +42,7 @@ const InstructorIndex = () => {
                 <div className="col ">
                   <div className="d-flex flex-column  pl-3 ">
                     <Link
-                      href={`/instructor/course/view/${course._id}`}
+                      href={`/instructor/course/view/${course.slug}`}
                       className="pointer"
                     >
                       <a className="mt-2 text-primary">
