@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import InstructorRoute from '@components/routes/InstructorRoute';
 import Resizer from 'react-image-file-resizer';
 import CourseCreateForm from '@components/forms/CourseCreateForm';
 import { toast } from 'react-toastify';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 
 const CourseCreate = () => {
+  const router = useRouter();
   const [values, setValues] = useState({
     name: '',
     description: '',
