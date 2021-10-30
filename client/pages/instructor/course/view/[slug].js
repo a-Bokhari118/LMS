@@ -4,6 +4,7 @@ import InstructorRoute from '@components/routes/InstructorRoute';
 import axios from 'axios';
 import { Avatar, Tooltip } from 'antd';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons';
+import ReactMarkdown from 'react-markdown';
 
 const CourseView = () => {
   const [course, setCourse] = useState({});
@@ -55,6 +56,13 @@ const CourseView = () => {
                     style={{ cursor: 'pointer' }}
                   />
                 </Tooltip>
+              </div>
+            </div>
+            <hr />
+            <div className="row">
+              <div className="col">
+                <h3>Course Description</h3>
+                <ReactMarkdown children={course?.description} />
               </div>
             </div>
           </div>
