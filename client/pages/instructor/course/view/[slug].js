@@ -6,6 +6,7 @@ import { Avatar, Button, Modal, Tooltip } from 'antd';
 import { CheckOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
 import AddLessonForm from '@components/forms/AddLessonForm';
+import { toast } from 'react-toastify';
 
 const CourseView = () => {
   const [course, setCourse] = useState({});
@@ -15,6 +16,7 @@ const CourseView = () => {
   const [visible, setVisible] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadButtonText, setUploadButtonText] = useState('Upload Video');
+  const [progress, setProgress] = useState(0);
   const [values, setValues] = useState({
     title: '',
     content: '',
@@ -34,10 +36,29 @@ const CourseView = () => {
     console.log(values);
   };
 
-  const handleVideo = (e) => {
-    const file = e.target.files[0];
-    setUploadButtonText(file.name);
-    console.log('handel vdieo');
+  const handleVideo = async (e) => {
+    try {
+      const file = e.target.files[0];
+      setUploadButtonText(file.name);
+      setUploading(true);
+
+      const videoData = new FormData();
+      videoData.append('video', file);
+      // progress bar
+      const { data } = await axios.post('/api/course/video-upload', videoData, {
+        onUploadProgress: (e) => {
+          setProgress(Math.round((100 * e.loaded) / e.total));
+        },
+      });
+
+      console.log(data);
+      setValues({ ...values, video: data });
+      setUploading(false);
+    } catch (err) {
+      console.log(err);
+      toast.error('Uploading Faild, try again!');
+      setUploading(false);
+    }
   };
   return (
     <InstructorRoute>
