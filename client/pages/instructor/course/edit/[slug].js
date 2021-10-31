@@ -89,6 +89,14 @@ const EditCourse = () => {
     }
   };
 
+  const handleDrag = (e, index) => {
+    console.log('on Drag =>', index);
+  };
+
+  const handleDrop = (e, index) => {
+    console.log('on Drop =>', index);
+  };
+
   return (
     <InstructorRoute>
       <div className="p-5 mb-4 bg-primary text-center square">
@@ -112,10 +120,15 @@ const EditCourse = () => {
         <div className="col lesson-list">
           <h4>{values?.lessons?.length} Lessons</h4>
           <List
+            onDragOver={(e) => e.preventDefault()}
             itemLayout="horizontal"
             dataSource={values?.lessons}
             renderItem={(item, index) => (
-              <Item>
+              <Item
+                draggable
+                onDragStart={(e) => handleDrag(e, index)}
+                onDrop={(e) => handleDrop(e, index)}
+              >
                 <Item.Meta
                   className="d-flex align-items-center "
                   avatar={<Avatar>{index + 1}</Avatar>}
