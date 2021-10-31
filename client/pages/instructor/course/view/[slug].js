@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Avatar, Button, Modal, Tooltip } from 'antd';
 import { CheckOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
+import AddLessonForm from '@components/forms/AddLessonForm';
 
 const CourseView = () => {
   const [course, setCourse] = useState({});
@@ -12,6 +13,12 @@ const CourseView = () => {
   const { slug } = router.query;
 
   const [visible, setVisible] = useState(false);
+  const [uploaing, setUploaing] = useState(false);
+  const [values, setValues] = useState({
+    title: '',
+    contnet: '',
+    video: '',
+  });
   useEffect(() => {
     loadCourse();
   }, [slug]);
@@ -19,6 +26,11 @@ const CourseView = () => {
   const loadCourse = async () => {
     const { data } = await axios.get(`/api/course/${slug}`);
     setCourse(data);
+  };
+
+  const handleAddLesson = (e) => {
+    e.preventDefault();
+    console.log(values);
   };
   return (
     <InstructorRoute>
@@ -92,7 +104,11 @@ const CourseView = () => {
               onCancel={() => setVisible(false)}
               footer={null}
             >
-              add lesons here baby
+              <AddLessonForm
+                values={values}
+                setValues={setValues}
+                handleAddLesson={handleAddLesson}
+              />
             </Modal>
           </div>
         )}
