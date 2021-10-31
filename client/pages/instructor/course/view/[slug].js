@@ -127,6 +127,9 @@ const CourseView = () => {
                   <EditOutlined
                     className="h5  text-warning"
                     style={{ marginRight: '20px', cursor: 'pointer' }}
+                    onClick={() =>
+                      router.push(`/instructor/course/edit/${slug}`)
+                    }
                   />
                 </Tooltip>
                 <Tooltip title="Publish">
