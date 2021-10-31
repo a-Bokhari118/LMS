@@ -6,6 +6,7 @@ import {
   create,
   read,
   uploadVideo,
+  removeVideo,
 } from '../controllers/course';
 import { requireSignin, isInstructor } from '../middlewares';
 const router = express.Router();
@@ -19,4 +20,5 @@ router.post('/course/remove-image', requireSignin, removeImage);
 router.post('/course', requireSignin, isInstructor, create);
 router.get('/course/:slug', read);
 router.post('/course/video-upload', requireSignin, formidable(), uploadVideo);
+router.post('/course/remove-video', requireSignin, removeVideo);
 module.exports = router;
