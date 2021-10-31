@@ -5,6 +5,9 @@ import Resizer from 'react-image-file-resizer';
 import CourseCreateForm from '@components/forms/CourseCreateForm';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { List, Avatar } from 'antd';
+
+const { Item } = List;
 
 const EditCourse = () => {
   const router = useRouter();
@@ -17,6 +20,7 @@ const EditCourse = () => {
     paid: true,
     category: '',
     loading: false,
+    lessons: [],
   });
 
   const [image, setImage] = useState({});
@@ -29,6 +33,7 @@ const EditCourse = () => {
   const loadCourse = async () => {
     const { data } = await axios.get(`/api/course/${slug}`);
     setValues(data);
+    if (data?.image) setImage(data.image);
   };
 
   const handleChange = (e) => {
@@ -74,9 +79,11 @@ const EditCourse = () => {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post('/api/course', { ...values, image });
-      toast.success('Course Created');
-      router.push('/instructor');
+      const { data } = await axios.put(`/api/course/${slug}`, {
+        ...values,
+        image,
+      });
+      toast.success('Course Updated');
     } catch (err) {
       toast.error(err.response.data);
     }
@@ -96,7 +103,28 @@ const EditCourse = () => {
           values={values}
           setValues={setValues}
           preview={preview}
+          editPage={true}
         />
+      </div>
+      <hr />
+
+      <div className="row pb-5 pt-5">
+        <div className="col lesson-list">
+          <h4>{values?.lessons?.length} Lessons</h4>
+          <List
+            itemLayout="horizontal"
+            dataSource={values?.lessons}
+            renderItem={(item, index) => (
+              <Item>
+                <Item.Meta
+                  className="d-flex align-items-center "
+                  avatar={<Avatar>{index + 1}</Avatar>}
+                  title={item.title}
+                ></Item.Meta>
+              </Item>
+            )}
+          ></List>
+        </div>
       </div>
     </InstructorRoute>
   );
