@@ -32,7 +32,7 @@ const EditCourse = () => {
 
   const loadCourse = async () => {
     const { data } = await axios.get(`/api/course/${slug}`);
-    setValues(data);
+    if (data) setValues(data);
     if (data?.image) setImage(data.image);
   };
 
@@ -90,11 +90,25 @@ const EditCourse = () => {
   };
 
   const handleDrag = (e, index) => {
-    console.log('on Drag =>', index);
+    e.dataTransfer.setData('itemIndex', index);
   };
 
-  const handleDrop = (e, index) => {
-    console.log('on Drop =>', index);
+  const handleDrop = async (e, index) => {
+    const movingItemIndex = e.dataTransfer.getData('itemIndex');
+    const targetItemIndex = index;
+    let allLessons = values.lessons;
+
+    let movingItem = allLessons[movingItemIndex];
+    allLessons.splice(movingItemIndex, 1);
+    allLessons.splice(targetItemIndex, 0, movingItem);
+
+    setValues({ ...values, lessons: [...allLessons] });
+
+    const { data } = await axios.put(`/api/course/${slug}`, {
+      ...values,
+      image,
+    });
+    toast.success('Lessons Rearranged Successfuly');
   };
 
   return (
