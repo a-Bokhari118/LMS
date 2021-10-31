@@ -13,10 +13,11 @@ const CourseView = () => {
   const { slug } = router.query;
 
   const [visible, setVisible] = useState(false);
-  const [uploaing, setUploaing] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadButtonText, setUploadButtonText] = useState('Upload Video');
   const [values, setValues] = useState({
     title: '',
-    contnet: '',
+    content: '',
     video: '',
   });
   useEffect(() => {
@@ -31,6 +32,12 @@ const CourseView = () => {
   const handleAddLesson = (e) => {
     e.preventDefault();
     console.log(values);
+  };
+
+  const handleVideo = (e) => {
+    const file = e.target.files[0];
+    setUploadButtonText(file.name);
+    console.log('handel vdieo');
   };
   return (
     <InstructorRoute>
@@ -108,6 +115,9 @@ const CourseView = () => {
                 values={values}
                 setValues={setValues}
                 handleAddLesson={handleAddLesson}
+                uploading={uploading}
+                uploadButtonText={uploadButtonText}
+                handleVideo={handleVideo}
               />
             </Modal>
           </div>
