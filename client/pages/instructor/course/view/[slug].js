@@ -20,7 +20,7 @@ const CourseView = () => {
   const [values, setValues] = useState({
     title: '',
     content: '',
-    video: '',
+    video: {},
   });
   useEffect(() => {
     loadCourse();
@@ -57,6 +57,24 @@ const CourseView = () => {
     } catch (err) {
       console.log(err);
       toast.error('Uploading Faild, try again!');
+      setUploading(false);
+    }
+  };
+
+  const handleVideoRemove = async () => {
+    try {
+      setUploading(true);
+      const { data } = await axios.post(
+        '/api/course/remove-video',
+        values.video
+      );
+      console.log(data);
+      setValues({ ...values, video: {} });
+      setUploading(false);
+      setUploadButtonText('Upload Video');
+    } catch (err) {
+      console.log(err);
+      toast.error('Removing Faild, try again!');
       setUploading(false);
     }
   };
@@ -139,6 +157,8 @@ const CourseView = () => {
                 uploading={uploading}
                 uploadButtonText={uploadButtonText}
                 handleVideo={handleVideo}
+                progress={progress}
+                handleVideoRemove={handleVideoRemove}
               />
             </Modal>
           </div>
