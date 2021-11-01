@@ -1,4 +1,5 @@
 import SingleCourseCard from '@components/cards/SingleCourseCard';
+import SingleCourseLessons from '@components/cards/SingleCourseLessons';
 import PreviewModal from '@components/modals/PreviewModal';
 
 import axios from 'axios';
@@ -25,6 +26,14 @@ const SingleCourse = ({ course }) => {
         setShowModal={setShowModal}
         preview={preview}
       />
+      {course?.lessons && (
+        <SingleCourseLessons
+          lessons={course.lessons}
+          setPreview={setPreview}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+      )}
     </>
   );
 };
