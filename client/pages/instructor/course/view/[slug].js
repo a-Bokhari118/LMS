@@ -112,6 +112,7 @@ const CourseView = () => {
       );
       if (!answer) return;
       const { data } = await axios.put(`/api/course/publish/${courseId}`);
+      setCourse(data);
       toast.success('Your course is live');
     } catch (err) {
       console.log(err);
@@ -126,6 +127,7 @@ const CourseView = () => {
       );
       if (!answer) return;
       const { data } = await axios.put(`/api/course/unpublish/${courseId}`);
+      setCourse(data);
       toast.success('Your course is not live');
     } catch (err) {
       console.log(err);
