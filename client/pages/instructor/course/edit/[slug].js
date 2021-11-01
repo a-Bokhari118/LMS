@@ -131,8 +131,34 @@ const EditCourse = () => {
     console.log('lesons deleted', data);
   };
 
-  const handleUpload = async () => {
-    console.log('vodeo');
+  const handleUpload = async (e) => {
+    if (current?.video && current.video.Location) {
+      const res = await axios.post(
+        `/api/course/remove-video/${values.instructor._id}`,
+        current?.video
+      );
+      console.log('removed', res);
+    }
+    const file = e.target.files[0];
+    setUploadVideoButtonText(file.name);
+    setUploading(true);
+
+    const videoData = new FormData();
+    videoData.append('video', file);
+    videoData.append('courseId', values._id);
+
+    const { data } = await axios.post(
+      `/api/course/video-upload/${values.instructor._id}`,
+      videoData,
+      {
+        onUploadProgress: (e) =>
+          setProgress(Math.round((100 * e.loaded) / e.total)),
+      }
+    );
+
+    console.log(data);
+    setCurrent({ ...current, video: data });
+    setUploading(false);
   };
 
   const handleUpdateLesson = () => {
