@@ -1,9 +1,10 @@
-import { Badge } from 'antd';
+import { Badge, Modal } from 'antd';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import ReactPlayer from 'react-player';
 import { currencyFormatter } from '../../utils/helpers';
 
 const SingleCourse = ({ course }) => {
@@ -19,6 +20,9 @@ const SingleCourse = ({ course }) => {
     paid,
     category,
   } = course;
+
+  const [showModal, setShowModal] = useState(false);
+  const [preview, setPreview] = useState('');
   return (
     <>
       <div
@@ -29,7 +33,7 @@ const SingleCourse = ({ course }) => {
           minHeight: '30vh',
         }}
       >
-        <div className="row">
+        <div className="row container mx-auto">
           <div className="col-md-8 ">
             <div style={{ width: '60%' }}>
               <h1 className="text-light font-weigth-bold">{name}</h1>
@@ -54,7 +58,30 @@ const SingleCourse = ({ course }) => {
             </div>
           </div>
           <div className="col-md-4">
-            <p>asjflkajkl</p>
+            {lessons[0]?.video?.Location ? (
+              <div
+                onClick={() => {
+                  setPreview(lessons[0]?.video?.Location);
+                  setShowModal(!showModal);
+                }}
+              >
+                <ReactPlayer
+                  className="react-player-div"
+                  url={lessons[0]?.video?.Location}
+                  light={image.Location}
+                  width="100%"
+                  height="225px"
+                />
+              </div>
+            ) : (
+              <>
+                <img
+                  src={image?.Location}
+                  alt={name}
+                  className="img img-fluid"
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
