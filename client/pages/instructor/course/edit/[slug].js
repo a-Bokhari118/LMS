@@ -5,8 +5,9 @@ import Resizer from 'react-image-file-resizer';
 import CourseCreateForm from '@components/forms/CourseCreateForm';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import { List, Avatar } from 'antd';
+import { List, Avatar, Modal } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import UpdateLessonForm from '@components/forms/UpdateLessonForm';
 
 const { Item } = List;
 
@@ -26,6 +27,12 @@ const EditCourse = () => {
 
   const [image, setImage] = useState({});
   const [preview, setPreview] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [current, setCurrent] = useState({});
+  const [uploadVideoButtonText, setUploadVideoButtonText] =
+    useState('Upload video');
+  const [progress, setProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     loadCourse();
@@ -123,6 +130,14 @@ const EditCourse = () => {
     const { data } = await axios.put(`/api/course/${slug}/${removed[0]._id}`);
     console.log('lesons deleted', data);
   };
+
+  const handleUpload = async () => {
+    console.log('vodeo');
+  };
+
+  const handleUpdateLesson = () => {
+    console.log('lesson');
+  };
   return (
     <InstructorRoute>
       <div className="p-5 mb-4 bg-primary text-center square">
@@ -154,9 +169,14 @@ const EditCourse = () => {
                 draggable
                 onDragStart={(e) => handleDrag(e, index)}
                 onDrop={(e) => handleDrop(e, index)}
+                style={{ cursor: 'pointer' }}
               >
                 <Item.Meta
-                  className="d-flex align-items-center "
+                  onClick={() => {
+                    setVisible(true);
+                    setCurrent(item);
+                  }}
+                  className="d-flex align-items-center"
                   avatar={<Avatar>{index + 1}</Avatar>}
                   title={item.title}
                 ></Item.Meta>
@@ -170,6 +190,24 @@ const EditCourse = () => {
           ></List>
         </div>
       </div>
+
+      <Modal
+        title="Update Lesson"
+        centered
+        visible={visible}
+        onCancel={() => setVisible(false)}
+        footer={null}
+      >
+        <UpdateLessonForm
+          current={current}
+          setCurrent={setCurrent}
+          handleUpdateLesson={handleUpdateLesson}
+          handleUpload={handleUpload}
+          uploadVideoButtonText={uploadVideoButtonText}
+          progress={progress}
+          uploading={uploading}
+        />
+      </Modal>
     </InstructorRoute>
   );
 };

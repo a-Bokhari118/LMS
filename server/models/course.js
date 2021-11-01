@@ -20,12 +20,10 @@ const lessonSchema = new Schema(
 
       minlength: 200,
     },
-    video: {
-      type: {},
-      free_preview: {
-        type: Boolean,
-        default: false,
-      },
+    video: {},
+    free_preview: {
+      type: Boolean,
+      default: false,
     },
   },
 
