@@ -186,10 +186,18 @@ export const update = async (req, res) => {
     if (req.user._id != course.instructor) {
       return res.status(400).send('Unauthorized');
     }
+    const alreadyExist = await Course.findOne({
+      slug: slugify(req.body.name.toLowerCase()),
+    });
+    if (alreadyExist) return res.status(400).send('Title is already taken');
 
-    const updated = await Course.findOneAndUpdate({ slug }, req.body, {
-      new: true,
-    }).exec();
+    const updated = await Course.findOneAndUpdate(
+      { slug },
+      { ...req.body, slug: slugify(req.body.name) },
+      {
+        new: true,
+      }
+    ).exec();
     res.json(updated);
   } catch (err) {
     console.log(err);
