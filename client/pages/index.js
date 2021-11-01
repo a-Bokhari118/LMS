@@ -1,3 +1,4 @@
+import CourseCard from '@components/cards/CourseCard';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -15,11 +16,11 @@ export default function Home() {
     <div>
       <h1 className="p-5 mb-4 bg-primary text-center square">Students LMS</h1>
 
-      <div className="cointainer-fluid">
+      <div className="container">
         <div className="row">
           {courses.map((course) => (
-            <div key={courses._id} className="col-md-4">
-              {<pre>{JSON.stringify(course)}</pre>}
+            <div key={course._id} className="col-md-4">
+              <CourseCard course={course} />
             </div>
           ))}
         </div>
