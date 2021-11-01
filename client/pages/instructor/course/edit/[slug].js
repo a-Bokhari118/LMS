@@ -6,6 +6,7 @@ import CourseCreateForm from '@components/forms/CourseCreateForm';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { List, Avatar } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const { Item } = List;
 
@@ -111,6 +112,17 @@ const EditCourse = () => {
     toast.success('Lessons Rearranged Successfuly');
   };
 
+  const handleDelete = async (index) => {
+    const answer = window.confirm('Are You Sure ?');
+    if (!answer) return;
+
+    let allLessons = values.lessons;
+    const removed = allLessons.splice(index, 1);
+    setValues({ ...values, lessons: allLessons });
+
+    const { data } = await axios.put(`/api/course/${removed[0]._id}`);
+    console.log('lesons deleted', data);
+  };
   return (
     <InstructorRoute>
       <div className="p-5 mb-4 bg-primary text-center square">
@@ -148,6 +160,11 @@ const EditCourse = () => {
                   avatar={<Avatar>{index + 1}</Avatar>}
                   title={item.title}
                 ></Item.Meta>
+
+                <DeleteOutlined
+                  onClick={() => handleDelete(index)}
+                  className="text-danger float-right"
+                />
               </Item>
             )}
           ></List>
