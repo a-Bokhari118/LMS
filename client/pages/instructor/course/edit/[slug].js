@@ -161,8 +161,22 @@ const EditCourse = () => {
     setUploading(false);
   };
 
-  const handleUpdateLesson = () => {
-    console.log('lesson');
+  const handleUpdateLesson = async (e) => {
+    e.preventDefault();
+
+    const { data } = await axios.put(
+      `/api/course/lesson/${slug}/${current._id}`,
+      current
+    );
+    setUploadVideoButtonText('Upload Video');
+    setVisible(false);
+    toast.success('Lesson Updated');
+    if (data.ok) {
+      let arr = values.lessons;
+      const index = arr.findIndex((el) => el._id === current._id);
+      arr[index] = current;
+      setValues({ ...values, lessons: arr });
+    }
   };
   return (
     <InstructorRoute>
