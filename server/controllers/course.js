@@ -283,3 +283,15 @@ export const unpublishCourse = async (req, res) => {
     return res.status(400).send('Publish Faild');
   }
 };
+
+export const courses = async (req, res) => {
+  try {
+    const all = await Course.find({ published: true })
+      .populate('instructor', '_id name')
+      .exec();
+    res.json(all);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send('Faild to get courses');
+  }
+};

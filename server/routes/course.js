@@ -13,9 +13,12 @@ import {
   updatedLesson,
   publishCourse,
   unpublishCourse,
+  courses,
 } from '../controllers/course';
 import { requireSignin, isInstructor } from '../middlewares';
 const router = express.Router();
+
+router.get('/courses', courses);
 
 // aws images
 router.post('/course/upload-image', requireSignin, uploadImage);
