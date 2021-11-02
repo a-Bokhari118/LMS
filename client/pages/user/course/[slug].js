@@ -12,8 +12,9 @@ const SingleCourse = () => {
   const { slug } = router.query;
   const [loading, setLoading] = useState(false);
   const [course, setCourse] = useState({ lessons: [] });
-  const [clicked, setClicked] = useState(-1);
+  const [clicked, setClicked] = useState(0);
   const [completed, setCompleted] = useState([]);
+  const [updateState, setUpdateState] = useState(false);
 
   useEffect(() => {
     if (slug) loadCourse();
@@ -43,12 +44,38 @@ const SingleCourse = () => {
   };
 
   const markCompleted = async () => {
-    const { data } = await axios.post(`/api/mark-completed`, {
-      courseId: course._id,
-      lessonId: course?.lessons[clicked]?._id,
-    });
-    console.log(data);
+    try {
+      const { data } = await axios.post(`/api/mark-completed`, {
+        courseId: course._id,
+        lessonId: course?.lessons[clicked]?._id,
+      });
+      setCompleted([...completed, course?.lessons[clicked]?._id]);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  const markIncompleted = async () => {
+    try {
+      const { data } = await axios.post(`/api/mark-incompleted`, {
+        courseId: course._id,
+        lessonId: course?.lessons[clicked]?._id,
+      });
+      const all = completed;
+      const index = all.indexOf(
+        course?.lessons[clicked]?._id || course?.lessons[0]?._id
+      );
+      if (index > -1) {
+        all.splice(index, 1);
+        setCompleted(all);
+        setUpdateState(!updateState);
+      }
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <StudentRoute>
       <div className="row ">
@@ -80,13 +107,13 @@ const SingleCourse = () => {
           </Menu>
         </div>
         <div className="col">
-          {clicked !== -1 ? (
+          {clicked !== 0 ? (
             <>
               <div className="alert alert-primary d-flex justify-content-between align-items-center">
                 <b>{course?.lessons?.[clicked]?.title.substring(0, 30)}</b>
                 {completed.includes(course.lessons[clicked]._id) ? (
                   <span onClick={markIncompleted} className="pointer">
-                    Mark as InCompleted
+                    Mark as Incompleted
                   </span>
                 ) : (
                   <span onClick={markCompleted} className="pointer">
@@ -104,6 +131,7 @@ const SingleCourse = () => {
                       width="100%"
                       height="100%"
                       controls
+                      onEnded={() => markCompleted()}
                     />
                   </div>
 
@@ -136,6 +164,7 @@ const SingleCourse = () => {
                       width="100%"
                       height="100%"
                       controls
+                      onEnded={() => markCompleted()}
                     />
                   </div>
 

@@ -356,32 +356,35 @@ export const userCourses = async (req, res) => {
 };
 
 export const markCompleted = async (req, res) => {
-  const { courseId, lessonId } = req.body;
+  try {
+    const { courseId, lessonId } = req.body;
 
-  const existing = await Completed.findOne({
-    user: req.user._id,
-    course: courseId,
-  }).exec();
-
-  if (existing) {
-    const updated = await Completed.findOneAndUpdate(
-      {
-        user: req.user._id,
-        course: courseId,
-      },
-      {
-        $addToSet: { lessons: lessonId },
-      },
-      { new: true }
-    ).exec();
-    res.json({ ok: true });
-  } else {
-    const create = await new Completed({
+    const existing = await Completed.findOne({
       user: req.user._id,
       course: courseId,
-      lessons: lessonId,
-    }).save();
-    res.json({ ok: true });
+    }).exec();
+
+    if (existing) {
+      const updated = await Completed.findOneAndUpdate(
+        {
+          user: req.user._id,
+          course: courseId,
+        },
+        {
+          $addToSet: { lessons: lessonId },
+        }
+      ).exec();
+      res.json({ ok: true });
+    } else {
+      const create = await new Completed({
+        user: req.user._id,
+        course: courseId,
+        lessons: lessonId,
+      }).save();
+      res.json({ ok: true });
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -392,6 +395,25 @@ export const listCompleted = async (req, res) => {
       course: req.body.courseId,
     }).exec();
     list && res.json(list.lessons);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const markIncompleted = async (req, res) => {
+  try {
+    const { courseId, lessonId } = req.body;
+
+    const updated = await Completed.findOneAndUpdate(
+      {
+        user: req.user._id,
+        course: courseId,
+      },
+      {
+        $pull: { lessons: lessonId },
+      }
+    ).exec();
+    res.json({ ok: true });
   } catch (err) {
     console.log(err);
   }
