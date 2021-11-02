@@ -18,7 +18,7 @@ import {
   freeEnrollment,
   userCourses,
 } from '../controllers/course';
-import { requireSignin, isInstructor } from '../middlewares';
+import { requireSignin, isInstructor, isEnrolled } from '../middlewares';
 const router = express.Router();
 
 router.get('/courses', courses);
@@ -51,5 +51,6 @@ router.get('/check-enrollment/:courseId', requireSignin, checkEnrollment);
 router.post('/free-enrollment/:courseId', requireSignin, freeEnrollment);
 
 router.get('/user-courses', requireSignin, userCourses);
+router.get('/user/course/:slug', requireSignin, isEnrolled, read);
 
 module.exports = router;
