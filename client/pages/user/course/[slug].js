@@ -5,6 +5,7 @@ import { Avatar, Menu } from 'antd';
 import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import ReactMarkdown from 'react-markdown';
+import { CheckCircleFilled, MinusCircleFilled } from '@ant-design/icons';
 
 const SingleCourse = () => {
   const router = useRouter();
@@ -12,11 +13,23 @@ const SingleCourse = () => {
   const [loading, setLoading] = useState(false);
   const [course, setCourse] = useState({ lessons: [] });
   const [clicked, setClicked] = useState(-1);
-  const [collapsed, setCollapsed] = useState(false);
+  const [completed, setCompleted] = useState([]);
 
   useEffect(() => {
     if (slug) loadCourse();
   }, [slug]);
+
+  useEffect(() => {
+    if (course) loadCompletedLessons();
+  }, [course]);
+
+  const loadCompletedLessons = async () => {
+    const { data } = await axios.post(`/api/list-completed`, {
+      courseId: course._id,
+    });
+    console.log('completed lessons', data);
+    setCompleted(data);
+  };
 
   const loadCourse = async () => {
     try {
@@ -51,6 +64,17 @@ const SingleCourse = () => {
                 onClick={() => setClicked(index)}
               >
                 {lesson.title.substring(0, 30)}
+                {completed.includes(lesson._id) ? (
+                  <CheckCircleFilled
+                    className="float-right text-primary ml-2"
+                    style={{ marginTop: '13px', marginLeft: '10px' }}
+                  />
+                ) : (
+                  <MinusCircleFilled
+                    className="float-right text-danger"
+                    style={{ marginTop: '13px', marginLeft: '10px' }}
+                  />
+                )}
               </Menu.Item>
             ))}
           </Menu>
@@ -60,9 +84,15 @@ const SingleCourse = () => {
             <>
               <div className="alert alert-primary d-flex justify-content-between align-items-center">
                 <b>{course?.lessons?.[clicked]?.title.substring(0, 30)}</b>
-                <span onClick={markCompleted} className="pointer">
-                  Mark as Completed
-                </span>
+                {completed.includes(course.lessons[clicked]._id) ? (
+                  <span onClick={markIncompleted} className="pointer">
+                    Mark as InCompleted
+                  </span>
+                ) : (
+                  <span onClick={markCompleted} className="pointer">
+                    Mark as Completed
+                  </span>
+                )}
               </div>
               {course?.lessons?.[clicked]?.video?.Location && (
                 <>
