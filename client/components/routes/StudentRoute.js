@@ -26,7 +26,7 @@ const StudentRoute = ({ children }) => {
         />
       ) : (
         <>
-          <div className="container-fluid px-5 py-2">{children}</div>
+          <div className="container-fluid ">{children}</div>
         </>
       )}
     </>
