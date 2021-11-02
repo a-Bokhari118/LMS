@@ -9,6 +9,7 @@ import {
   EditOutlined,
   QuestionOutlined,
   UploadOutlined,
+  UserSwitchOutlined,
 } from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
 import AddLessonForm from '@components/forms/AddLessonForm';
@@ -20,6 +21,7 @@ const CourseView = () => {
   const router = useRouter();
   const { slug } = router.query;
 
+  const [student, setStudent] = useState(0);
   const [visible, setVisible] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadButtonText, setUploadButtonText] = useState('Upload Video');
@@ -32,6 +34,17 @@ const CourseView = () => {
   useEffect(() => {
     loadCourse();
   }, [slug]);
+
+  useEffect(() => {
+    course && studentCount();
+  }, [course]);
+
+  const studentCount = async () => {
+    const { data } = await axios.post('/api/instructor/student-count', {
+      courseId: course._id,
+    });
+    setStudent(data.length);
+  };
 
   const loadCourse = async () => {
     const { data } = await axios.get(`/api/course/${slug}`);
@@ -161,6 +174,13 @@ const CourseView = () => {
               </div>
 
               <div className="d-flex">
+                <Tooltip title={`${student} Enrolled`}>
+                  <UserSwitchOutlined
+                    className="h5 pointer text-info"
+                    style={{ marginRight: '20px', cursor: 'pointer' }}
+                  />
+                </Tooltip>
+
                 <Tooltip title="Edit">
                   <EditOutlined
                     className="h5  text-warning"
