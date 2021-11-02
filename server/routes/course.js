@@ -16,6 +16,7 @@ import {
   courses,
   checkEnrollment,
   freeEnrollment,
+  userCourses,
 } from '../controllers/course';
 import { requireSignin, isInstructor } from '../middlewares';
 const router = express.Router();
@@ -48,5 +49,7 @@ router.put('/course/:slug/:lessonId', requireSignin, removeLesson);
 router.get('/check-enrollment/:courseId', requireSignin, checkEnrollment);
 
 router.post('/free-enrollment/:courseId', requireSignin, freeEnrollment);
+
+router.get('/user-courses', requireSignin, userCourses);
 
 module.exports = router;
