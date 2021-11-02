@@ -324,7 +324,7 @@ export const checkEnrollment = async (req, res) => {
 export const freeEnrollment = async (req, res) => {
   try {
     const course = await Course.findById(req.params.courseId).exec();
-    if (course.paid) return;
+
     await User.findByIdAndUpdate(
       req.user._id,
       {

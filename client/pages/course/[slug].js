@@ -32,10 +32,6 @@ const SingleCourse = ({ course }) => {
     setEnroll(data);
   };
 
-  const handlePaidEnrollment = () => {
-    //
-  };
-
   const handleFreeEnrollment = async (e) => {
     e.preventDefault();
 
@@ -63,7 +59,6 @@ const SingleCourse = ({ course }) => {
         setPreview={setPreview}
         user={user}
         loading={loading}
-        handlePaidEnrollment={handlePaidEnrollment}
         handleFreeEnrollment={handleFreeEnrollment}
         enroll={enroll}
         setEnroll={setEnroll}

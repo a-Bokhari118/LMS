@@ -94,7 +94,7 @@ const SingleCourseCard = ({
               icon={<SafetyOutlined />}
               size="large"
               disabled={loading}
-              onClick={paid ? handlePaidEnrollment : handleFreeEnrollment}
+              onClick={handleFreeEnrollment}
               style={{
                 display: 'flex',
                 justifyContent: 'center',
