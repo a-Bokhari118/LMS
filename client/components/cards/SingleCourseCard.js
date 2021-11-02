@@ -1,4 +1,5 @@
-import { Badge } from 'antd';
+import { LoadingOutlined, SafetyOutlined } from '@ant-design/icons';
+import { Badge, Button } from 'antd';
 import ReactPlayer from 'react-player';
 import { currencyFormatter } from '../../utils/helpers';
 
@@ -8,6 +9,12 @@ const SingleCourseCard = ({
   setShowModal,
   preview,
   setPreview,
+  handleFreeEnrollment,
+  handlePaidEnrollment,
+  loading,
+  user,
+  enroll,
+  setEnroll,
 }) => {
   const {
     name,
@@ -72,6 +79,34 @@ const SingleCourseCard = ({
             <>
               <img src={image?.Location} alt={name} className="img img-fluid" />
             </>
+          )}
+
+          {loading ? (
+            <div className="d-flex justify-content-center">
+              <LoadingOutlined className="h1 text-danger" />
+            </div>
+          ) : (
+            <Button
+              className="mt-4"
+              type="danger"
+              block
+              shape="round"
+              icon={<SafetyOutlined />}
+              size="large"
+              disabled={loading}
+              onClick={paid ? handlePaidEnrollment : handleFreeEnrollment}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              {user
+                ? enroll.status
+                  ? 'Go To Course'
+                  : 'Enroll'
+                : 'Login to Enroll'}
+            </Button>
           )}
         </div>
       </div>

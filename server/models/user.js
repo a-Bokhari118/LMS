@@ -37,6 +37,7 @@ const userSchema = new Schema(
       data: String,
       default: '',
     },
+    courses: [{ type: mongoose.Schema.ObjectId, ref: 'Course' }],
   },
 
   { timestamps: true }

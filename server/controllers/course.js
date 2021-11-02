@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import { nanoid } from 'nanoid';
 import Course from '../models/course';
+import User from '../models/user';
 import slugify from 'slugify';
 import { readFileSync } from 'fs';
 const awsConfig = {
@@ -301,5 +302,42 @@ export const courses = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).send('Faild to get courses');
+  }
+};
+
+export const checkEnrollment = async (req, res) => {
+  const { courseId } = req.params;
+  const user = await User.findById(req.user._id).exec();
+
+  let ids = [];
+  let length = user.courses && user.courses.length;
+  for (let i = 0; i < length; i++) {
+    ids.push(user.courses[i].toString());
+  }
+
+  res.json({
+    status: ids.includes(courseId),
+    course: await Course.findById(courseId).exec(),
+  });
+};
+
+export const freeEnrollment = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.courseId).exec();
+    if (course.paid) return;
+    await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $addToSet: { courses: course._id },
+      },
+      { new: true }
+    ).exec();
+    res.json({
+      message: 'You have Enrolled',
+      course,
+    });
+  } catch (err) {
+    console.log('free enrollment error');
+    return res.status(400).send('Enrollment Faild');
   }
 };
