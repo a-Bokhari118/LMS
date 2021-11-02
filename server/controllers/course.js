@@ -2,6 +2,7 @@ import AWS from 'aws-sdk';
 import { nanoid } from 'nanoid';
 import Course from '../models/course';
 import User from '../models/user';
+import Completed from '../models/completed';
 import slugify from 'slugify';
 import { readFileSync } from 'fs';
 const awsConfig = {
@@ -351,5 +352,35 @@ export const userCourses = async (req, res) => {
     res.json(courses);
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const markCompleted = async (req, res) => {
+  const { courseId, lessonId } = req.body;
+
+  const existing = await Completed.findOne({
+    user: req.user._id,
+    course: courseId,
+  }).exec();
+
+  if (existing) {
+    const updated = await Completed.findOneAndUpdate(
+      {
+        user: req.user._id,
+        course: courseId,
+      },
+      {
+        $addToSet: { lessons: lessonId },
+      },
+      { new: true }
+    ).exec();
+    res.json({ ok: true });
+  } else {
+    const create = await new Completed({
+      user: req.user._id,
+      course: courseId,
+      lessons: lessonId,
+    }).save();
+    res.json({ ok: true });
   }
 };

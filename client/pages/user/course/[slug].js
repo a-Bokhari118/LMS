@@ -34,6 +34,7 @@ const SingleCourse = () => {
       courseId: course._id,
       lessonId: course?.lessons[clicked]?._id,
     });
+    console.log(data);
   };
   return (
     <StudentRoute>
